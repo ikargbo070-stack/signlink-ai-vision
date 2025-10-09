@@ -89,3 +89,8 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Mirror video for natural hand tracking */
+.mirror {
+  transform: scaleX(-1);
+}

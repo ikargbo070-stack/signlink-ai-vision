@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Hand, Camera, CameraOff, ArrowLeft } from "lucide-react";
+import { Hand, Camera, CameraOff, ArrowLeft, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useHandTracking } from "@/hooks/useHandTracking";
+import { recognizeASLLetter } from "@/utils/aslRecognition";
 
 const Recognize = () => {
   const navigate = useNavigate();
@@ -12,6 +14,23 @@ const Recognize = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [prediction, setPrediction] = useState<string>("");
   const [confidence, setConfidence] = useState<number>(0);
+  const [detectedHand, setDetectedHand] = useState(false);
+
+  const handleHandDetection = useCallback((landmarks: number[][]) => {
+    setDetectedHand(true);
+    const result = recognizeASLLetter(landmarks);
+    
+    if (result.letter && result.letter !== "?") {
+      setPrediction(result.letter);
+      setConfidence(result.confidence);
+    }
+  }, []);
+
+  const { startTracking, stopTracking, isProcessing } = useHandTracking(
+    videoRef,
+    canvasRef,
+    handleHandDetection
+  );
 
   const startCamera = async () => {
     try {
@@ -23,10 +42,25 @@ const Recognize = () => {
         }
       });
 
-      if (videoRef.current) {
+      if (videoRef.current && canvasRef.current) {
         videoRef.current.srcObject = stream;
+        
+        // Wait for video to load metadata
+        videoRef.current.onloadedmetadata = () => {
+          if (videoRef.current && canvasRef.current) {
+            canvasRef.current.width = videoRef.current.videoWidth;
+            canvasRef.current.height = videoRef.current.videoHeight;
+          }
+        };
+
         setIsStreaming(true);
-        toast.success("Camera started successfully");
+        toast.success("Camera started - initializing AI...");
+        
+        // Start hand tracking after a brief delay
+        setTimeout(() => {
+          startTracking();
+          toast.success("AI hand tracking active!");
+        }, 1000);
       }
     } catch (error) {
       console.error("Error accessing camera:", error);
@@ -35,6 +69,8 @@ const Recognize = () => {
   };
 
   const stopCamera = () => {
+    stopTracking();
+    
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
       stream.getTracks().forEach(track => track.stop());
@@ -42,6 +78,7 @@ const Recognize = () => {
       setIsStreaming(false);
       setPrediction("");
       setConfidence(0);
+      setDetectedHand(false);
       toast.info("Camera stopped");
     }
   };
@@ -88,11 +125,11 @@ const Recognize = () => {
                     autoPlay
                     playsInline
                     muted
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover mirror"
                   />
                   <canvas
                     ref={canvasRef}
-                    className="absolute top-0 left-0 w-full h-full"
+                    className="absolute top-0 left-0 w-full h-full pointer-events-none"
                   />
                   {!isStreaming && (
                     <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -100,6 +137,17 @@ const Recognize = () => {
                         <Camera className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                         <p className="text-muted-foreground">Camera not active</p>
                       </div>
+                    </div>
+                  )}
+                  {isStreaming && isProcessing && (
+                    <div className="absolute top-4 left-4 flex items-center gap-2 bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg">
+                      <Zap className="w-4 h-4 animate-pulse" />
+                      <span className="text-sm font-medium">AI Tracking Active</span>
+                    </div>
+                  )}
+                  {isStreaming && detectedHand && (
+                    <div className="absolute top-4 right-4 bg-accent/90 text-accent-foreground px-3 py-2 rounded-lg">
+                      <span className="text-sm font-medium">✓ Hand Detected</span>
                     </div>
                   )}
                 </div>
