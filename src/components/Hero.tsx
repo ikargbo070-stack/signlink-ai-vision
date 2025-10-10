@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Hand, Video, Brain, Zap, LogOut, User } from "lucide-react";
+import { Hand, Video, Brain, Zap, LogOut, User, BarChart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -25,6 +25,10 @@ const Hero = () => {
                 <User className="w-4 h-4 text-primary" />
                 <span className="text-sm text-muted-foreground">{user.email}</span>
               </div>
+              <Button variant="outline" onClick={() => navigate("/dashboard")} className="gap-2">
+                <BarChart className="w-4 h-4" />
+                Dashboard
+              </Button>
               <Button variant="outline" onClick={() => signOut()} className="gap-2">
                 <LogOut className="w-4 h-4" />
                 Sign Out

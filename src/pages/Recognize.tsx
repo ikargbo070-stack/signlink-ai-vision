@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Hand, Camera, CameraOff, ArrowLeft, Zap } from "lucide-react";
+import { Hand, Camera, CameraOff, ArrowLeft, Zap, BarChart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useHandTracking } from "@/hooks/useHandTracking";
 import { recognizeASLLetter } from "@/utils/aslRecognition";
+import { useProgress } from "@/hooks/useProgress";
 
 const Recognize = () => {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ const Recognize = () => {
   const [prediction, setPrediction] = useState<string>("");
   const [confidence, setConfidence] = useState<number>(0);
   const [detectedHand, setDetectedHand] = useState(false);
+  const [sessionStart, setSessionStart] = useState<number>(0);
+  const [recognitionCount, setRecognitionCount] = useState(0);
+  const { updateProgress, saveSession } = useProgress();
 
   const handleHandDetection = useCallback((landmarks: number[][]) => {
     setDetectedHand(true);
@@ -23,8 +27,14 @@ const Recognize = () => {
     if (result.letter && result.letter !== "?") {
       setPrediction(result.letter);
       setConfidence(result.confidence);
+      
+      // Track successful recognition
+      if (result.confidence >= 70) {
+        setRecognitionCount(prev => prev + 1);
+        updateProgress("letter", result.letter, true);
+      }
     }
-  }, []);
+  }, [updateProgress]);
 
   const { startTracking, stopTracking, isProcessing } = useHandTracking(
     videoRef,
@@ -54,6 +64,7 @@ const Recognize = () => {
         };
 
         setIsStreaming(true);
+        setSessionStart(Date.now());
         toast.success("Camera started - initializing AI...");
         
         // Start hand tracking after a brief delay
@@ -68,8 +79,16 @@ const Recognize = () => {
     }
   };
 
-  const stopCamera = () => {
+  const stopCamera = async () => {
     stopTracking();
+    
+    // Save session before stopping
+    if (sessionStart > 0) {
+      const duration = Math.floor((Date.now() - sessionStart) / 1000);
+      const avgAccuracy = recognitionCount > 0 ? confidence : 0;
+      await saveSession("letter", duration, avgAccuracy);
+      toast.success(`Session saved: ${duration}s practice time`);
+    }
     
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
@@ -79,6 +98,8 @@ const Recognize = () => {
       setPrediction("");
       setConfidence(0);
       setDetectedHand(false);
+      setSessionStart(0);
+      setRecognitionCount(0);
       toast.info("Camera stopped");
     }
   };
@@ -101,10 +122,16 @@ const Recognize = () => {
               SignLink
             </h1>
           </div>
-          <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Back
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="ghost" onClick={() => navigate("/dashboard")} className="gap-2">
+              <BarChart className="w-4 h-4" />
+              Dashboard
+            </Button>
+            <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
+          </div>
         </div>
       </header>
 
