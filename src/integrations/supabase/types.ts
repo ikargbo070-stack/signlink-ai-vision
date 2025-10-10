@@ -14,7 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      asl_progress: {
+        Row: {
+          attempts: number | null
+          id: string
+          last_practiced: string | null
+          mastered: boolean | null
+          sign_type: string
+          sign_value: string
+          successful_attempts: number | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number | null
+          id?: string
+          last_practiced?: string | null
+          mastered?: boolean | null
+          sign_type: string
+          sign_value: string
+          successful_attempts?: number | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number | null
+          id?: string
+          last_practiced?: string | null
+          mastered?: boolean | null
+          sign_type?: string
+          sign_value?: string
+          successful_attempts?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      learning_sessions: {
+        Row: {
+          accuracy: number | null
+          created_at: string | null
+          duration_seconds: number
+          id: string
+          session_type: string
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number | null
+          created_at?: string | null
+          duration_seconds?: number
+          id?: string
+          session_type: string
+          user_id: string
+        }
+        Update: {
+          accuracy?: number | null
+          created_at?: string | null
+          duration_seconds?: number
+          id?: string
+          session_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

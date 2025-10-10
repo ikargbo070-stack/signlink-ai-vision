@@ -1,20 +1,40 @@
 import { Button } from "@/components/ui/button";
-import { Hand, Video, Brain, Zap } from "lucide-react";
+import { Hand, Video, Brain, Zap, LogOut, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 flex flex-col">
       <header className="container mx-auto px-6 py-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-hero rounded-xl flex items-center justify-center shadow-glow-primary">
-            <Hand className="w-6 h-6 text-primary-foreground" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-hero rounded-xl flex items-center justify-center shadow-glow-primary">
+              <Hand className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+              SignLink
+            </h1>
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-            SignLink
-          </h1>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-lg">
+                <User className="w-4 h-4 text-primary" />
+                <span className="text-sm text-muted-foreground">{user.email}</span>
+              </div>
+              <Button variant="outline" onClick={() => signOut()} className="gap-2">
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </Button>
+            </div>
+          ) : (
+            <Button variant="outline" onClick={() => navigate("/auth")} className="gap-2">
+              Sign In
+            </Button>
+          )}
         </div>
       </header>
 
@@ -38,10 +58,10 @@ const Hero = () => {
             <Button
               size="lg"
               className="bg-gradient-hero hover:opacity-90 transition-opacity shadow-glow-primary text-lg px-8 py-6"
-              onClick={() => navigate("/recognize")}
+              onClick={() => user ? navigate("/recognize") : navigate("/auth")}
             >
               <Video className="w-5 h-5 mr-2" />
-              Start Recognition
+              {user ? "Start Recognition" : "Get Started"}
             </Button>
             <Button
               size="lg"
