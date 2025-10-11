@@ -64,16 +64,25 @@ const Hero = () => {
               className="bg-gradient-hero hover:opacity-90 transition-opacity shadow-glow-primary text-lg px-8 py-6"
               onClick={() => user ? navigate("/recognize") : navigate("/auth")}
             >
-              <Video className="w-5 h-5 mr-2" />
-              {user ? "Start Recognition" : "Get Started"}
+              <Hand className="w-5 h-5 mr-2" />
+              {user ? "Recognize Letters" : "Get Started"}
+            </Button>
+            <Button
+              size="lg"
+              className="bg-gradient-hero hover:opacity-90 transition-opacity shadow-glow-primary text-lg px-8 py-6"
+              onClick={() => user ? navigate("/translate") : navigate("/auth")}
+            >
+              <Hand className="w-5 h-5 mr-2" />
+              {user ? "Translate Words" : "Learn Words"}
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="border-2 text-lg px-8 py-6"
-              onClick={() => navigate("/recognize")}
+              onClick={() => user ? navigate("/dashboard") : navigate("/auth")}
             >
-              Learn More
+              <BarChart className="w-5 h-5 mr-2" />
+              Progress
             </Button>
           </div>
 
