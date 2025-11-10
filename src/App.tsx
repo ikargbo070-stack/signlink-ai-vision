@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Recognize from "./pages/Recognize";
 import WordTranslate from "./pages/WordTranslate";
+import WordToSign from "./pages/WordToSign";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -37,6 +38,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <WordTranslate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/word-to-sign"
+              element={
+                <ProtectedRoute>
+                  <WordToSign />
                 </ProtectedRoute>
               }
             />

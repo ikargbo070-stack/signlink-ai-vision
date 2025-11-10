@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Hand, Video, Brain, Zap, LogOut, User, BarChart } from "lucide-react";
+import { Hand, Video, Brain, Zap, LogOut, User, BarChart, Type } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -58,7 +58,7 @@ const Hero = () => {
             Real-time American Sign Language recognition powered by AI. Learn, practice, and communicate seamlessly through your webcam.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-slide-up">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-slide-up flex-wrap">
             <Button
               size="lg"
               className="bg-gradient-hero hover:opacity-90 transition-opacity shadow-glow-primary text-lg px-8 py-6"
@@ -74,6 +74,14 @@ const Hero = () => {
             >
               <Hand className="w-5 h-5 mr-2" />
               {user ? "Translate Words" : "Learn Words"}
+            </Button>
+            <Button
+              size="lg"
+              className="bg-gradient-hero hover:opacity-90 transition-opacity shadow-glow-primary text-lg px-8 py-6"
+              onClick={() => user ? navigate("/word-to-sign") : navigate("/auth")}
+            >
+              <Type className="w-5 h-5 mr-2" />
+              {user ? "Word to Sign" : "Learn Signs"}
             </Button>
             <Button
               size="lg"
