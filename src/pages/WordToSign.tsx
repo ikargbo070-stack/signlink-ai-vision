@@ -9,6 +9,27 @@ import aslILoveYou from "@/assets/asl-iloveyou.png";
 import aslMe from "@/assets/asl-me.png";
 import aslMy from "@/assets/asl-my.png";
 import aslSit from "@/assets/asl-sit.png";
+import aslThankYou from "@/assets/asl-thankyou.png";
+import aslPlease from "@/assets/asl-please.png";
+import aslSorry from "@/assets/asl-sorry.png";
+import aslHelp from "@/assets/asl-help.png";
+import aslYes from "@/assets/asl-yes.png";
+import aslNo from "@/assets/asl-no.png";
+import aslGood from "@/assets/asl-good.png";
+import aslBad from "@/assets/asl-bad.png";
+import aslWater from "@/assets/asl-water.png";
+import aslEat from "@/assets/asl-eat.png";
+import aslDrink from "@/assets/asl-drink.png";
+import aslHome from "@/assets/asl-home.png";
+import aslWork from "@/assets/asl-work.png";
+import aslFriend from "@/assets/asl-friend.png";
+import aslFamily from "@/assets/asl-family.png";
+import aslLove from "@/assets/asl-love.png";
+import aslHappy from "@/assets/asl-happy.png";
+import aslSad from "@/assets/asl-sad.png";
+import aslBathroom from "@/assets/asl-bathroom.png";
+import aslMore from "@/assets/asl-more.png";
+import aslStop from "@/assets/asl-stop.png";
 
 const ASL_SIGNS: Record<string, string> = {
   hello: aslHello,
@@ -16,6 +37,27 @@ const ASL_SIGNS: Record<string, string> = {
   me: aslMe,
   my: aslMy,
   sit: aslSit,
+  "thank you": aslThankYou,
+  please: aslPlease,
+  sorry: aslSorry,
+  help: aslHelp,
+  yes: aslYes,
+  no: aslNo,
+  good: aslGood,
+  bad: aslBad,
+  water: aslWater,
+  eat: aslEat,
+  drink: aslDrink,
+  home: aslHome,
+  work: aslWork,
+  friend: aslFriend,
+  family: aslFamily,
+  love: aslLove,
+  happy: aslHappy,
+  sad: aslSad,
+  bathroom: aslBathroom,
+  more: aslMore,
+  stop: aslStop,
 };
 
 const WordToSign = () => {
@@ -80,7 +122,7 @@ const WordToSign = () => {
           <Card className="p-6 space-y-4">
             <div className="flex gap-2">
               <Input
-                placeholder="Type a word (hello, i love you, me, my, sit)"
+                placeholder="Type a word or phrase..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -111,7 +153,7 @@ const WordToSign = () => {
 
             {inputText && translatedSigns.length === 0 && (
               <p className="text-center text-muted-foreground mt-4">
-                No ASL sign found for "{inputText}". Try: hello, i love you, me, my, or sit
+                No ASL sign found for "{inputText}". Try one of the available words below.
               </p>
             )}
           </Card>
