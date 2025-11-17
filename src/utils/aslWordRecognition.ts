@@ -1,5 +1,10 @@
 // ASL Word Recognition - Common sign words
-export const ASL_WORDS = ["hello", "i love you", "me", "my", "sit"];
+export const ASL_WORDS = [
+  "hello", "i love you", "me", "my", "sit",
+  "thank you", "please", "sorry", "help", "yes", "no",
+  "good", "bad", "water", "eat", "drink", "home", "work",
+  "friend", "family", "love", "happy", "sad", "bathroom", "more", "stop"
+];
 
 interface WordRecognitionResult {
   word: string;
