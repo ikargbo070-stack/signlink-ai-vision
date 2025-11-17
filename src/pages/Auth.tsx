@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Hand } from "lucide-react";
+import { Hand, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +55,16 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 flex items-center justify-center px-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10 flex flex-col items-center justify-center px-6 py-8">
+      <Button
+        variant="ghost"
+        onClick={() => navigate("/")}
+        className="absolute top-6 left-6 gap-2"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to Home
+      </Button>
+      
       <Card className="w-full max-w-md p-8 bg-gradient-card border-2">
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="w-12 h-12 bg-gradient-hero rounded-xl flex items-center justify-center shadow-glow-primary">
