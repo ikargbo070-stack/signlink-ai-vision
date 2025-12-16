@@ -11,6 +11,7 @@ import WordTranslate from "./pages/WordTranslate";
 import WordToSign from "./pages/WordToSign";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
+import Dissertation from "./pages/Dissertation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route path="/dissertation" element={<Dissertation />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
