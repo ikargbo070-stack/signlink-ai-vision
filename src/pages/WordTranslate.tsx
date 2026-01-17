@@ -35,7 +35,7 @@ const WordTranslate = () => {
     }
   }, [updateProgress]);
 
-  const { startTracking, stopTracking, isProcessing } = useHandTracking(
+  const { startTracking, stopTracking, isProcessing, isModelReady } = useHandTracking(
     videoRef,
     canvasRef,
     handleHandDetection
@@ -54,21 +54,37 @@ const WordTranslate = () => {
       if (videoRef.current && canvasRef.current) {
         videoRef.current.srcObject = stream;
         
-        videoRef.current.onloadedmetadata = () => {
-          if (videoRef.current && canvasRef.current) {
-            canvasRef.current.width = videoRef.current.videoWidth;
-            canvasRef.current.height = videoRef.current.videoHeight;
+        // Wait for video to be fully ready
+        await new Promise<void>((resolve) => {
+          if (videoRef.current) {
+            videoRef.current.onloadeddata = () => {
+              if (videoRef.current && canvasRef.current) {
+                canvasRef.current.width = videoRef.current.videoWidth;
+                canvasRef.current.height = videoRef.current.videoHeight;
+              }
+              resolve();
+            };
           }
-        };
+        });
 
         setIsStreaming(true);
         setSessionStart(Date.now());
         toast.success("Camera started - initializing AI...");
         
-        setTimeout(() => {
-          startTracking();
-          toast.success("AI hand tracking active!");
-        }, 1000);
+        // Wait for model to be ready before starting tracking
+        const waitForModel = () => {
+          if (isModelReady) {
+            const success = startTracking();
+            if (success) {
+              toast.success("AI hand tracking active!");
+            }
+          } else {
+            toast.info("Loading AI model, please wait...");
+            setTimeout(waitForModel, 500);
+          }
+        };
+        
+        setTimeout(waitForModel, 100);
       }
     } catch (error) {
       console.error("Error accessing camera:", error);
